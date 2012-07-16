@@ -29,23 +29,12 @@ If you are using Spatial Adapter, *remove it first*.
 - postgis  1.3+
 
 
-=== As gem:
-
-    sudo gem install postgis-adapter
+=== Using bundler on rails 
 
 Rails:
 
-    config.gem "postgis_adapter"
+    gem "postgis_adapter", :git => "git://github.com/th3james/postgis_adapter.git"
 
-
-Github version:
-
-
-    sudo gem install nofxx-postgis_adapter --source http://gems.github.com
-
-Rails:
-
-    config.gem "nofxx-postgis_adapter", :lib => "postgis_adapter", :source => "http://gems.github.com"
 
 
 === As plugin:
