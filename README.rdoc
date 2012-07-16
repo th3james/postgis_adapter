@@ -12,6 +12,10 @@ Postgis Manual - http://postgis.refractions.net/documentation/manual-svn
 
 *PostGIS and Rails 2+ only*.
 
+= About this fork
+
+This fork was developed for use in protectedplanet.net with the intention of supporting Rails 2 and Postgis 2.0+
+
 
 == Install
 

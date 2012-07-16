@@ -190,7 +190,7 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
   def add_index(table_name, column_name, options = {})
     index_name = options[:name] || index_name(table_name,:column => Array(column_name))
     if options[:spatial]
-      execute "CREATE INDEX #{index_name} ON #{table_name} USING GIST (#{Array(column_name).join(", ")} GIST_GEOMETRY_OPS)"
+      execute "CREATE INDEX #{index_name} ON #{table_name} USING GIST (#{Array(column_name).join(", ")} )"
     else
       super
     end
@@ -253,7 +253,7 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
    #Pete Deffendol's patch
    alias :original_disable_referential_integrity :disable_referential_integrity
    def disable_referential_integrity(&block) #:nodoc:
-     ignore_tables = %w{ geometry_columns spatial_ref_sys geography_columns }
+     ignore_tables = %w{ geometry_columns spatial_ref_sys geography_columns raster_columns raster_overviews }
      execute(tables.select { |name| !ignore_tables.include?(name) }.collect { |name| "ALTER TABLE #{quote_table_name(name)} DISABLE TRIGGER ALL" }.join(";"))
      yield
    ensure
