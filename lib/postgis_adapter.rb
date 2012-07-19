@@ -5,14 +5,14 @@
 # Code from
 # http://georuby.rubyforge.org Spatial Adapter
 #
-require 'activerecord'
+require 'active_record'
 require 'active_record/connection_adapters/postgresql_adapter'
 require 'geo_ruby'
 require 'postgis_adapter/common_spatial_adapter'
-require 'postgis_functions'
-require 'postgis_functions/common'
-require 'postgis_functions/class'
-require 'postgis_functions/bbox'
+require 'postgis_adapter/functions'
+require 'postgis_adapter/functions/common'
+require 'postgis_adapter/functions/class'
+require 'postgis_adapter/functions/bbox'
 require 'postgis_adapter/acts_as_geom'
 
 include GeoRuby::SimpleFeatures
@@ -254,10 +254,10 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
    alias :original_disable_referential_integrity :disable_referential_integrity
    def disable_referential_integrity(&block) #:nodoc:
      ignore_tables = %w{ geometry_columns spatial_ref_sys geography_columns raster_columns raster_overviews }
-     execute(tables.select { |name| !ignore_tables.include?(name) }.collect { |name| "ALTER TABLE #{quote_table_name(name)} DISABLE TRIGGER ALL" }.join(";"))
+     execute(tables.select { |name| !ignore_tables.include?(name) }.map { |name| "ALTER TABLE #{quote_table_name(name)} DISABLE TRIGGER ALL" }.join(";"))
      yield
    ensure
-     execute(tables.select { |name| !ignore_tables.include?(name)}.collect { |name| "ALTER TABLE #{quote_table_name(name)} ENABLE TRIGGER ALL" }.join(";"))
+     execute(tables.select { |name| !ignore_tables.include?(name)}.map { |name| "ALTER TABLE #{quote_table_name(name)} ENABLE TRIGGER ALL" }.join(";"))
    end
  end
 
@@ -289,8 +289,8 @@ SELECT * FROM geometry_columns WHERE f_table_name = '#{table_name}'
     end
 
     raw_geom_infos
-    rescue => e
-      nil
+  rescue => e
+    nil
   end
 
 end
